@@ -18,3 +18,16 @@ ggplot(nba_cleaned_df, aes(x = points_per_game, y = win_shares)) +
     y = "Career Win Shares"
   ) +
   theme_minimal()
+
+#We will predict the expected win share for a top 5 draft pick.
+library(rpart)
+library(rpart.plot)
+
+top_5_picks <- nba_cleaned_df[nba_cleaned_df$overall_pick <= 5, ]
+
+formula <- win_shares ~ points_per_game + average_assists + average_total_rebounds
+
+top_5_tree <- rpart(formula, data = top_5_picks, method = "anova")
+rpart.plot(top_5_tree, type = 2, extra = 101, under = TRUE, faclen = 0,
+           main = "Decision Tree for Predicting Career Win Shares")
+summary(top_5_tree)
